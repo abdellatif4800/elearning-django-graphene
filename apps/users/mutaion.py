@@ -12,17 +12,16 @@ class RegistrationMutation(graphene.Mutation):
     class Arguments:
         userData = myInputs.UserInput()
 
-    user = graphene.Field(myTypes.RegistrationType)
+    user = graphene.Field(myTypes.UserType)
 
     def mutate(root, info, **kwargs):
+        user_data = kwargs["userData"]
         user = User.objects.create_user(
-            kwargs["first_name"], kwargs["email"], kwargs["password"]
+            user_data["first_name"], user_data["email"], user_data["password"]
         )
-        print(user)
 
         return RegistrationMutation(user=user)
-        # question = myModels.Question(id="123", ques="asd?", ques_type="tf")
-        # question.text = text
-        # # question.save()
-        #
-        # return QuestionMutation(question=question)
+
+
+class usersMutation(graphene.ObjectType):
+    registration = RegistrationMutation.Field()

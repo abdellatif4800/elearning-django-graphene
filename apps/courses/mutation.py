@@ -9,12 +9,10 @@ from django.contrib.auth.models import User
 from graphene_django.forms.mutation import DjangoFormMutation, DjangoModelFormMutation
 
 
-class QuestionMutation(graphene.Mutation):
+class CourseMutation(graphene.Mutation):
     class Arguments:
-        # The input arguments for this mutation
         in1 = graphene.String()
 
-    # The class attributes define the response of the mutation
     question = graphene.String()
 
     def mutate(root, info, text, id):
@@ -23,3 +21,7 @@ class QuestionMutation(graphene.Mutation):
         # question.save()
 
         return QuestionMutation(question=question)
+
+
+class coursesMutation(graphene.ObjectType):
+    update_question = CourseMutation.Field()
