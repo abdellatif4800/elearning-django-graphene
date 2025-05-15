@@ -1,0 +1,72 @@
+type Query {
+  getCourse: CourseType
+  signin(username: String, password: String): SigninType
+}
+
+type CourseType {
+  id: ID!
+  content: String!
+  title: String!
+}
+
+type SigninType {
+  token: String
+}
+
+type Mutation {
+  createCourse(courseData: CourseInput): CourseMutation
+  registration(userData: UserInput): RegistrationMutation
+}
+
+type CourseMutation {
+  course: CourseType
+}
+
+input CourseInput {
+  title: String
+  content: String
+}
+
+type RegistrationMutation {
+  user: UserType
+}
+
+type UserType {
+  id: ID!
+  password: String!
+  lastLogin: DateTime
+
+  """
+  Designates that this user has all permissions without explicitly assigning them.
+  """
+  isSuperuser: Boolean!
+
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+
+  """Designates whether the user can log into this admin site."""
+  isStaff: Boolean!
+
+  """
+  Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+  """
+  isActive: Boolean!
+  dateJoined: DateTime!
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+input UserInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+}

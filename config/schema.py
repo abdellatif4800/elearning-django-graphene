@@ -1,18 +1,16 @@
 import graphene
 from apps.users.mutaion import usersMutation
 from apps.users.queries import usersQueries
-from apps.courses.mutation import coursesMutation
-from apps.courses.queries import coursesQueries
+from apps.tutorials.mutation import Tutorials_Mutation
+from apps.tutorials.queries import Tutorial_Queries
 
 
-class Query(usersQueries, coursesQueries, graphene.ObjectType):
+class Query(usersQueries, Tutorial_Queries, graphene.ObjectType):
     pass
 
 
-class Mutation(usersMutation, coursesMutation, graphene.ObjectType):
+class Mutation(usersMutation, Tutorials_Mutation, graphene.ObjectType):
     pass
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
-
-print(schema)

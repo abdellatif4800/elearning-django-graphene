@@ -1,0 +1,70 @@
+name: elearning-django-graphene
+
+services:
+  elearning-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: elearning-app-container
+    ports:
+      - "8000:8000"
+    networks:
+      - elearning-django-network
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    mem_limit: 1024m
+    mem_reservation: 512m
+    memswap_limit: 2048m  
+
+  elearning-postgres:
+    image: postgres:latest
+    container_name: elearning-psql-container
+    restart: always
+    networks:
+      - elearning-django-network
+    volumes:
+      - elearning-psql-volume:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: el-db
+    mem_limit: 768m
+    mem_reservation: 384m 
+    memswap_limit: 768m   
+
+    
+
+  # ngrok:
+  #   image: ngrok/ngrok:latest
+  #   network_mode: host
+  #   environment:
+  #     - NGROK_AUTHTOKEN=2wnxGfsaNvmBBnNMeD8hocMbQsF_7gbtC95SbxDWurqp92Q7F
+  #   command: http --log=stdout 8000
+  #   stdin_open: true
+  #   tty: true
+
+  # elearning-pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: elearning-pgadmin4
+  #   networks:
+  #     - elearning-django-network
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin123
+  #   ports:
+  #     - "5051:80"
+  #   volumes:
+  #     - elearning-pgadmin-volume:/var/lib/pgadmin
+  #     - ./rawsql:/var/lib/pgadmin/storage/admin_example.com:rw
+
+networks:
+  elearning-django-network:
+    driver: bridge
+
+volumes:
+  elearning-psql-volume:
+  # elearning-pgadmin-volume:

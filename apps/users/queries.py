@@ -21,5 +21,5 @@ class usersQueries(graphene.ObjectType):
         user = authenticate(username=username, password=password)
         if user is not None:
             token = generate_token({"username": username})
-            print(token)
+
             return myTypes.SigninType(token=token)
