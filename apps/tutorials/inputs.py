@@ -3,16 +3,13 @@ import graphene
 
 class TutorialInput(graphene.InputObjectType):
     name = graphene.String()
-
-
-class ImageInput(graphene.InputObjectType):
-    urls = graphene.String()
-    alt_texts = graphene.String()
+    author = graphene.ID()
+    # updated_at = graphene.DateTime()
 
 
 class UnitInput(graphene.InputObjectType):
-    tutorial_id = graphene.ID(required=True)
-    title = graphene.String(required=True)
-    content = graphene.String(required=True)
-    unit_number = graphene.Int(required=True)
-    images = graphene.Field(ImageInput)
+    tutorial = graphene.ID()
+    title = graphene.String()
+    content = graphene.String()
+    unit_number = graphene.Int()
+    images = graphene.String()
