@@ -1,14 +1,14 @@
-FROM python
+FROM python:3.12-slim
 
-# RUN apt-get update \
-#     && apt-get install -y --no-install-recommends \
-#     postgresql-client \
-#     && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-WORKDIR /usr/src/app
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
-COPY . .
+WORKDIR /app
+
+ADD . /app
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen
 
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+CMD ["uv", "run", "uvicorn", "config.asgi:application", "--host", "0.0.0.0", "--port", "8000","--reload"]

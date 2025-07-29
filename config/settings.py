@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+import os
+import logging.config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,14 +16,31 @@ SECRET_KEY = "django-insecure-^l4acc^&r1+y%a-8c+h=pa%12b9!nb!vo0j8bm)-mk#(l#n#wz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ROOT_URLCONF = "config.urls"
+
+ASGI_APPLICATION = "config.asgi.application"
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "UTC"
+
+USE_I18N = True
+
+USE_TZ = True
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+ALLOWED_HOSTS = ["*", "testserver"]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://localhost:8000',
-    'https://elearning-app:8000',
+    # 'https://localhost:8000',
+    "https://elearning-django:8000",
 ]
 
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -33,9 +52,88 @@ INSTALLED_APPS = [
     "graphene_django",
     "apps.users",
     "apps.tutorials",
-
 ]
-GRAPHENE = {"SCHEMA": "config.schema.schema"}
+
+GRAPHENE = {
+    "SCHEMA": "config.schema.schema",
+    "GRAPHIQL_ENABLED": True,
+}
+
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "elearning_db",
+        "USER": "user",
+        "PASSWORD": "pass123",
+        "HOST": "postgres-db",
+        "PORT": "5432",
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis-db:6379/elearning/",
+        # "LOCATION": "redis://localhost:6379/elearning/",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # "PASSWORD": "mysecret"
+        },
+    }
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": "user123",
+            "secret_key": "pass123123",
+            "bucket_name": "my-bucket",
+            "endpoint_url": "http://minio-storage:9000",
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "[{levelname}] {asctime} {name}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "project.log"),
+            "formatter": "default",
+        },
+    },
+    "root": {
+        "handlers": ["console", "file"],
+        "level": "INFO",
+    },
+    "loggers": {
+        # You can configure custom loggers per module here
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -46,7 +144,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -63,26 +160,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "config.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "el-db",
-        "USER": "user",
-        "PASSWORD": "pass123",
-        'HOST': os.getenv('DB_HOST', 'elearning-postgres'),
-        "PORT": os.getenv('DB_PORT', "5432"),
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -98,26 +175,3 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
-USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

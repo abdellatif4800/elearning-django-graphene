@@ -1,13 +1,13 @@
-import graphene
-from django import forms
-
-from . import models as myModels
-from . import types as myTypes
-from . import forms as myForms
-from . import mutaion as myMutations
-from graphene_django import DjangoObjectType, DjangoListField
 from django.contrib.auth import authenticate, login
+
+import graphene
+import graphene_django
+
+from . import types as myTypes
 from .helper import generate_token
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class usersQueries(graphene.ObjectType):
@@ -19,7 +19,10 @@ class usersQueries(graphene.ObjectType):
         username = kwargs["username"]
         password = kwargs["password"]
         user = authenticate(username=username, password=password)
+
         if user is not None:
-            token = generate_token({"username": username})
+            token = generate_token(
+                {"username": username, "user_id": user.id, "is_staff": user.is_staff}
+            )
 
             return myTypes.SigninType(token=token)

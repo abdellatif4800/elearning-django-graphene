@@ -1,5 +1,5 @@
 import graphene
-from apps.users.mutaion import usersMutation
+from apps.users.mutation import usersMutation
 from apps.users.queries import usersQueries
 from apps.tutorials.mutation import Tutorials_Mutation
 from apps.tutorials.queries import Tutorial_Queries

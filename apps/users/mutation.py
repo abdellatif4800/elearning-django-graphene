@@ -1,11 +1,10 @@
 import graphene
-from . import types as myTypes
-from . import forms as myForms
-from . import models as myModels
-from . import inputs as myInputs
+from graphene_django.forms.mutation import DjangoFormMutation, DjangoModelFormMutation
+
 from django.contrib.auth.models import User
 
-from graphene_django.forms.mutation import DjangoFormMutation, DjangoModelFormMutation
+from . import types as myTypes
+from . import inputs as myInputs
 
 
 class RegistrationMutation(graphene.Mutation):
@@ -23,5 +22,6 @@ class RegistrationMutation(graphene.Mutation):
         return RegistrationMutation(user=user)
 
 
+# Applying the decorator to a function
 class usersMutation(graphene.ObjectType):
     registration = RegistrationMutation.Field()

@@ -1,10 +1,10 @@
 import graphene
 
 
-class TutorialInput(graphene.InputObjectType):
+class ManageTutorialInput(graphene.InputObjectType):
     name = graphene.String()
-    author = graphene.ID()
-    # updated_at = graphene.DateTime()
+    category = graphene.String()
+    published = graphene.Boolean()
 
 
 class UnitInput(graphene.InputObjectType):
@@ -12,4 +12,9 @@ class UnitInput(graphene.InputObjectType):
     title = graphene.String()
     content = graphene.String()
     unit_number = graphene.Int()
-    images = graphene.String()
+
+
+class UpdateUnitInput(graphene.InputObjectType):
+    title = graphene.String()
+    content = graphene.String()
+    unit_number = graphene.Int()
