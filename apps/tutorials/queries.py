@@ -6,6 +6,9 @@ from graphene_django import DjangoObjectType, DjangoListField
 from . import models as myModels
 from . import types as myTypes
 from . import mutation as myMutations
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Tutorial_Queries(graphene.ObjectType):

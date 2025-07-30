@@ -1,8 +1,10 @@
 import graphene
+from .enums import RoleEnum
+from .models import CustomUser
 
 
 class UserInput(graphene.InputObjectType):
-    first_name = graphene.String()
-    last_name = graphene.String()
+    username = graphene.String()
     email = graphene.String()
     password = graphene.String()
+    role = RoleEnum()

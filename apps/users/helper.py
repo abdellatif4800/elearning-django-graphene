@@ -3,6 +3,9 @@ import os
 from dotenv import load_dotenv
 import jwt
 import logging
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +30,9 @@ def verify_token(func):
         if auth_header is not None:
             token = auth_header.split(" ")[1]
             try:
-                jwt.decode(token, jwt_secret, algorithms=["HS256"])
+                decoded = jwt.decode(token, jwt_secret, algorithms=["HS256"])
+                kwargs["decoded_token"] = decoded
+
             except jwt.InvalidTokenError:
                 raise GraphQLError("Invalid token")
             except jwt.ExpiredSignatureError:
@@ -43,6 +48,7 @@ def verify_admin(func):
         auth_header = info.context.headers.get("Authorization")
         token = auth_header.split(" ")[1]
         decoded = jwt.decode(token, jwt_secret, algorithms=["HS256"])
+
         if decoded.get("is_staff") == False:
             raise GraphQLError("not admin")
         else:

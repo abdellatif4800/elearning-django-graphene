@@ -49,10 +49,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # ------------------
     "graphene_django",
+    # ------------------
     "apps.users",
     "apps.tutorials",
+    "apps.quizzes",
 ]
+
+AUTH_USER_MODEL = "users.CustomUser"
+
 
 GRAPHENE = {
     "SCHEMA": "config.schema.schema",
